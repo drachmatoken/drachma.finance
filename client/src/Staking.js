@@ -1,9 +1,9 @@
 import React, { Component } from "react";
-import NyanToken from "./contracts/NyanToken.json";
-import CatnipToken from "./contracts/CatnipToken.json";
+import DrachmaToken from "./contracts/DrachmaToken.json";
+import ObolToken from "./contracts/ObolToken.json";
 import {getWeb3Var} from "./shared";
 
-import nyanLogo from './assets/nyan-logo.png';
+import drachmaLogo from './assets/drachma-logo.png';
 
 export default class Staking extends Component {
 
@@ -15,8 +15,8 @@ state = {
     isApproving: false,
     isStaking: false,
     isWithdrawing: false,
-    catnipRewards: 0,
-    totalNyanSupply: 0,
+    obolRewards: 0,
+    totalDrachmaSupply: 0,
     allowance: 0
     };
   
@@ -26,44 +26,44 @@ state = {
 
   /** getters */
   getAllowance = async () => {
-    let _nyanAllowance = await this.nyanInstance.methods.allowance(this.accounts[0], this.catnipInstance._address).call();
-    if (_nyanAllowance > 0) {
-        this.setState({isApproved: true, allowance: this.web3.utils.fromWei(_nyanAllowance.toString())})
+    let _drachmaAllowance = await this.drachmaInstance.methods.allowance(this.accounts[0], this.obolInstance._address).call();
+    if (_drachmaAllowance > 0) {
+        this.setState({isApproved: true, allowance: this.web3.utils.fromWei(_drachmaAllowance.toString())})
     }
   }
 
-  getNyanBalance = async () => {
-    let _nyanBalance = await this.nyanInstance.methods.balanceOf(this.accounts[0]).call();
+  getDrachmaBalance = async () => {
+    let _drachmaBalance = await this.drachmaInstance.methods.balanceOf(this.accounts[0]).call();
     this.setState({
-      nyanBalance: this.web3.utils.fromWei(_nyanBalance)
+      drachmaBalance: this.web3.utils.fromWei(_drachmaBalance)
     })
   }
 
-  getNyanSupply = async () => {
-    let _nyanSupply = await this.nyanInstance.methods.totalSupply().call();
+  getDrachmaSupply = async () => {
+    let _drachmaSupply = await this.drachmaInstance.methods.totalSupply().call();
     this.setState({
-      totalNyanSupply: this.web3.utils.fromWei(_nyanSupply)
+      totalDrachmaSupply: this.web3.utils.fromWei(_drachmaSupply)
     })
   }
 
   getMyStakeAmount = async () => {
-    let stakeA = await this.catnipInstance.methods.getAddressStakeAmount(this.accounts[0]).call();
+    let stakeA = await this.obolInstance.methods.getAddressStakeAmount(this.accounts[0]).call();
     
     this.setState({stakedAmount: this.web3.utils.fromWei(stakeA)});
   }
 
-  getCatnipRewards = async () => {
+  getObolRewards = async () => {
     
-    let cRewards = await this.catnipInstance.methods.myRewardsBalance(this.accounts[0]).call();
+    let cRewards = await this.obolInstance.methods.myRewardsBalance(this.accounts[0]).call();
 
-    this.setState({catnipRewards: this.web3.utils.fromWei(cRewards)});
+    this.setState({obolRewards: this.web3.utils.fromWei(cRewards)});
   }
 
   /** setters & modifiers */
   updateStakingInput(e) {
     this.setState({stakeAmount: e.target.value})
     
-    if (this.state.stakeAmount > this.state.allowance || this.state.nyanBalance){
+    if (this.state.stakeAmount > this.state.allowance || this.state.drachmaBalance){
       // disable button
       
     } else {
@@ -77,14 +77,14 @@ state = {
     */
   }
 
-  stakeNyan = async () => {
-    if ((this.state.isStaking || this.state.stakeAmount === 0) || (this.state.stakeAmount > this.state.nyanBalance)) {
+  stakeDrachma = async () => {
+    if ((this.state.isStaking || this.state.stakeAmount === 0) || (this.state.stakeAmount > this.state.drachmaBalance)) {
         return;
     }
 
     this.setState({isStaking: true});
     try {
-        let stakeRes = await this.catnipInstance.methods.stake(this.web3.utils.toWei(this.state.stakeAmount.toString())).send({
+        let stakeRes = await this.obolInstance.methods.stake(this.web3.utils.toWei(this.state.stakeAmount.toString())).send({
             from: this.accounts[0]
         });
         if (stakeRes["status"]) {
@@ -96,13 +96,13 @@ state = {
     }
   }
 
-  withdrawNyan = async () => {
+  withdrawDrachma = async () => {
     if (this.state.isWithdrawing || this.state.stakeAmount === 0) {
         return;
     }
     this.setState({isWithdrawing: true});
     try {
-        let unstakeRes = await this.catnipInstance.methods.withdraw(this.web3.utils.toWei(this.state.stakeAmount.toString())).send({
+        let unstakeRes = await this.obolInstance.methods.withdraw(this.web3.utils.toWei(this.state.stakeAmount.toString())).send({
             from: this.accounts[0]
         });
     
@@ -117,13 +117,13 @@ state = {
     }
   }
 
-  approveNyan = async () => {
+  approveDrachma = async () => {
     if (this.state.isApproving) {
         return;
     }  
     this.setState({isApproving: true});
     
-    let approveStaking = await this.nyanInstance.methods.approve(this.catnipInstance._address, this.web3.utils.toWei(this.state.totalNyanSupply.toString())).send({
+    let approveStaking = await this.drachmaInstance.methods.approve(this.obolInstance._address, this.web3.utils.toWei(this.state.totalDrachmaSupply.toString())).send({
         from: this.accounts[0]
     });
     
@@ -141,17 +141,17 @@ state = {
     }
   }
 
-  setMaxNyan() {
-    this.setState({stakeAmount: this.state.nyanBalance});
+  setMaxDrachma() {
+    this.setState({stakeAmount: this.state.drachmaBalance});
   }
 
   claimRewards = async () => {
-    if(this.state.catnipRewards > 0){
-      await this.catnipInstance.methods.getReward().send({
+    if(this.state.obolRewards > 0){
+      await this.obolInstance.methods.getReward().send({
         from: this.accounts[0]
       });
       
-      this.getCatnipRewards();
+      this.getObolRewards();
     }
   }
 
@@ -168,21 +168,21 @@ state = {
       // Get the contract instance.
       this.networkId = await this.web3.eth.net.getId();
 
-      this.nyanInstance = new this.web3.eth.Contract(
-        NyanToken.abi,
-        process.env.REACT_APP_NYAN_TOKEN_CONTRACT_ADDRESS
+      this.drachmaInstance = new this.web3.eth.Contract(
+        DrachmaToken.abi,
+        process.env.REACT_APP_DRAC_TOKEN_CONTRACT_ADDRESS
       );
      
-      this.catnipInstance = new this.web3.eth.Contract(
-        CatnipToken.abi,
-        process.env.REACT_APP_CATNIP_TOKEN_CONTRACT_ADDRESS
+      this.obolInstance = new this.web3.eth.Contract(
+        ObolToken.abi,
+        process.env.REACT_APP_OBOL_TOKEN_CONTRACT_ADDRESS
       );
 
       this.getAllowance();
-      this.getNyanSupply();
-      this.getNyanBalance();
+      this.getDrachmaSupply();
+      this.getDrachmaBalance();
       this.getMyStakeAmount();
-      this.getCatnipRewards();
+      this.getObolRewards();
 
       // Set web3, accounts, and contract to the state, and then proceed with an
       // example of interacting with the contract's methods.
@@ -202,22 +202,22 @@ state = {
           <span className="close" onClick={this.handleClick}>
             &times;
           </span>
-          <h1>STAKE NYAN</h1>
+          <h1>STAKE DRAC</h1>
           <div className="amount-staked-box">
             <div className="inline-block amount-staked-image">
-              <img className="balance-logo-image" alt="nyan logo" src={nyanLogo}/>
+              <img className="balance-logo-image" alt="drachma logo" src={drachmaLogo}/>
             </div>
             <div className="inline-block">
               <div className="top-box-desc">Amount staked</div>
-              <div className="top-box-val nyan-balance">{this.state.stakedAmount}</div>
+              <div className="top-box-val drachma-balance">{this.state.stakedAmount}</div>
             </div>
             <div className="inline-block">
-              <div className="top-box-desc">Your  NYAN balance</div>
-              <div className="top-box-val nyan-balance">{this.state.nyanBalance}</div>
+              <div className="top-box-desc">Your  DRAC balance</div>
+              <div className="top-box-val drachma-balance">{this.state.drachmaBalance}</div>
             </div>
           </div>
             <div className="max-container">
-              <button className="as-link" onClick={this.setMaxNyan.bind(this)}>Max amount</button>
+              <button className="as-link" onClick={this.setMaxDrachma.bind(this)}>Max amount</button>
             </div>
             <div>
                 <input 
@@ -230,37 +230,37 @@ state = {
                 </input>
             </div>
             <br />
-            {!this.state.isApproved ? <div className="button stake-button" onClick={this.approveNyan}>
+            {!this.state.isApproved ? <div className="button stake-button" onClick={this.approveDrachma}>
                 {!this.state.isApproving ? <div>STEP 1/2: APPROVE</div> : null}
                 {this.state.isApproving ? <div>APPROVING...</div> : null}
             </div> : null}
-            {this.state.isApproved ? <div className={`button stake-button ${this.state.stakeAmount > 0 && this.state.stakeAmount < this.state.nyanBalance ? "" : "disabled"}`} onClick={this.stakeNyan}>
+            {this.state.isApproved ? <div className={`button stake-button ${this.state.stakeAmount > 0 && this.state.stakeAmount < this.state.drachmaBalance ? "" : "disabled"}`} onClick={this.stakeDrachma}>
                 {!this.state.isStaking ? <div>STEP 2/2: STAKE</div> : null}
                 {this.state.isStaking ? <div>STAKING...</div> : null}
             </div> : null}
-            <div className={`button withdraw-button ${this.state.nyanBalance > 0 || this.state.stakeAmount > 0 && this.state.stakeAmount <= this.state.stakedAmount ? "" : "disabled"}`} onClick={this.withdrawNyan}>
+            <div className={`button withdraw-button ${this.state.drachmaBalance > 0 || this.state.stakeAmount > 0 && this.state.stakeAmount <= this.state.stakedAmount ? "" : "disabled"}`} onClick={this.withdrawDrachma}>
                 {!this.state.isWithdrawing ? <div>WITHDRAW</div> : null}
                 {this.state.isWithdrawing ? <div>WITHDRAWING...</div> : null}
             </div>
 
             <div>
-              <div className="align-left"><h1>GET CATNIP</h1></div>
+              <div className="align-left"><h1>GET OBOL</h1></div>
               <div className="align-right max-container">
-                <button className="as-link" onClick={this.getCatnipRewards}>UPDATE</button>
+                <button className="as-link" onClick={this.getObolRewards}>UPDATE</button>
               </div>
               <div className="clear"></div>
             </div>
             <div>
-            <p>INFO: Catnip rewards grow per block and are updated on each transaction(send) to functions 
+            <p>INFO: Obol rewards grow per block and are updated on each transaction(send) to functions 
                 with the "updateStakingRewards" modifier.</p>
             </div>
             <div>
                 <input className="input" disabled 
-                value={this.state.catnipRewards}
-                placeholder={this.state.catnipRewards} type="number"></input>
+                value={this.state.obolRewards}
+                placeholder={this.state.obolRewards} type="number"></input>
             </div>
             <br />
-            <div className={`button stake-button ${this.state.catnipRewards > 0 ? "" : "disabled"}`} onClick={this.claimRewards}>CLAIM</div>
+            <div className={`button stake-button ${this.state.obolRewards > 0 ? "" : "disabled"}`} onClick={this.claimRewards}>CLAIM</div>
         </div>
       </div>
     );

@@ -2,15 +2,15 @@ import React, { Component } from "react";
 import Staking from "./Staking";
 import Pump from "./Pump";
 import Mine from "./Mine";
-import NyanToken from "./contracts/NyanToken.json";
-import CatnipToken from "./contracts/CatnipToken.json";
+import DrachmaToken from "./contracts/DrachmaToken.json";
+import ObolToken from "./contracts/ObolToken.json";
 import getWeb3 from "./getWeb3";
 import {setWeb3} from "./shared";
 
 import "./App.css";
 
-import nyanGif from './assets/nyan-small.gif';
-import nyanLogo from './assets/nyan-logo.png';
+import drachmaGif from './assets/drachma-small.gif';
+import drachmaLogo from './assets/drachma-logo.png';
 
 import Web3 from "web3";
 
@@ -62,10 +62,10 @@ class App extends Component {
   state = {
     isViewingStaking : false,
     isViewingPump: false,
-    nyanBalance: 0,
-    totalNyanSupply: 0,
-    totalNyanStaked: 0,
-    totalCatnipSupply: 0,
+    drachmaBalance: 0,
+    totalDrachmaSupply: 0,
+    totalDrachmaStaked: 0,
+    totalObolSupply: 0,
     isViewingGifts: false,
     isViewingMine: false
    };
@@ -81,51 +81,51 @@ class App extends Component {
     return num.toString().match(re)[0];
   }
 
-  getRoundedNyanBalance() {
-    return this.toFixed(this.state.nyanBalance, 6);
+  getRoundetDrachmBalance() {
+    return this.toFixed(this.state.drachmaBalance, 6);
   }
 
-  getRoundedTotalNyanStaked() {
-    let _nyanStaked = this.state.totalNyanStaked;
-    if (!isNaN(_nyanStaked)) {
-      return parseFloat(_nyanStaked).toFixed(2);
+  getRoundedTotalDrachmaStaked() {
+    let _drachmaStaked = this.state.totalDrachmaStaked;
+    if (!isNaN(_drachmaStaked)) {
+      return parseFloat(_drachmaStaked).toFixed(2);
     }
     
-    return _nyanStaked;
+    return _drachmaStaked;
   }
 
-   getNyanBalance = async () => {
-     let _nyanBalance = await this.nyanInstance.methods.balanceOf(this.accounts[0]).call();
+   getDrachmaBalance = async () => {
+     let _drachmaBalance = await this.drachmaInstance.methods.balanceOf(this.accounts[0]).call();
      this.setState({
-       nyanBalance: this.web3.utils.fromWei(_nyanBalance)
+       drachmaBalance: this.web3.utils.fromWei(_drachmaBalance)
      })
    }
 
-   getNyanSupply = async () => {
-    let _nyanSupply = await this.nyanInstance.methods.totalSupply().call();
+   getDrachmaSupply = async () => {
+    let _drachmaSupply = await this.drachmaInstance.methods.totalSupply().call();
     this.setState({
-      totalNyanSupply: this.web3.utils.fromWei(_nyanSupply)
+      totalDrachmaSupply: this.web3.utils.fromWei(_drachmaSupply)
     })
   }
 
-  totalNyanStaked = async () => {
-   let _totalNyanStaked = await this.catnipInstance.methods.totalStakedSupply().call();
+  totalDrachmaStaked = async () => {
+   let _totalDrachmaStaked = await this.obolInstance.methods.totalStakedSupply().call();
 
    this.setState({
-     totalNyanStaked: this.web3.utils.fromWei(_totalNyanStaked)
+     totalDrachmaStaked: this.web3.utils.fromWei(_totalDrachmaStaked)
    })
  }
 
- getCatnipSupply = async () => {
-  let _catnipSupply = await this.catnipInstance.methods.totalSupply().call();
+ getObolSupply = async () => {
+  let _obolSupply = await this.obolInstance.methods.totalSupply().call();
 
   this.setState({
-    totalCatnipSupply: this.web3.utils.fromWei(_catnipSupply)
+    totalObolSupply: this.web3.utils.fromWei(_obolSupply)
   })
 }
 
-   setNyanAddress = async () => {
-     await this.catnipInstance.methods.setNyanAddress(this.nyanInstance._address).send({
+   setDrachmaAddress = async () => {
+     await this.obolInstance.methods.setDrachmaAddress(this.drachmaInstance._address).send({
       from: this.accounts[0],
       gas: 1000000
      });
@@ -156,7 +156,7 @@ class App extends Component {
 
 
   componentDidMount = async () => {
-    document.title = "Nyan.finance";
+    document.title = "Drachma.finance";
 
     try {
       // // Get network provider and web3 instance.
@@ -182,25 +182,25 @@ class App extends Component {
       // Get the contract instance.
       this.networkId = await this.web3.eth.net.getId();
      
-      this.nyanInstance = new this.web3.eth.Contract(
-        NyanToken.abi,
-        process.env.REACT_APP_NYAN_TOKEN_CONTRACT_ADDRESS
+      this.drachmaInstance = new this.web3.eth.Contract(
+        DrachmaToken.abi,
+        process.env.REACT_APP_DRAC_TOKEN_CONTRACT_ADDRESS
       );
      
-      this.catnipInstance = new this.web3.eth.Contract(
-        CatnipToken.abi,
-        process.env.REACT_APP_CATNIP_TOKEN_CONTRACT_ADDRESS
+      this.obolInstance = new this.web3.eth.Contract(
+        ObolToken.abi,
+        process.env.REACT_APP_OBOL_TOKEN_CONTRACT_ADDRESS
       );
 
       setWeb3(this.web3);
 
-      this.getNyanSupply();
-      this.getCatnipSupply();
-      this.totalNyanStaked();
+      this.getDrachmaSupply();
+      this.getObolSupply();
+      this.totalDrachmaStaked();
     
       // Set web3, accounts, and contract to the state, and then proceed with an
       // example of interacting with the contract's methods.
-      this.setState({loaded: true}, this.getNyanBalance);
+      this.setState({loaded: true}, this.getDrachmaBalance);
     } catch (error) {
       // Catch any errors for any of the above operations.
       alert(
@@ -217,29 +217,29 @@ class App extends Component {
     // }
     return (
       <div className="App">
-        <div className="Logo">NYAN.FINANCE</div>
+        <div className="Logo">DRAC.FINANCE</div>
         <div className="top-box-container">
           <div className="top-box balance-box">
-            <img className="balance-logo-image" alt="balance logo" src={nyanLogo}/>
-            <div className="top-box-desc">Your NYAN Balance</div>
-            <div className="top-box-val nyan-balance">{this.getRoundedNyanBalance()}</div>
+            <img className="balance-logo-image" alt="balance logo" src={drachmaLogo}/>
+            <div className="top-box-desc">Your DRAC Balance</div>
+            <div className="top-box-val drachma-balance">{this.getRoundetDrachmBalance()}</div>
           </div>
           <div className="top-box stats-box">
             <div className="stats-op">
-              <div className="top-box-desc">Total Nyan Supply</div>
-              <div className="top-box-val">{this.state.totalNyanSupply}</div>
+              <div className="top-box-desc">Total Drachma Supply</div>
+              <div className="top-box-val">{this.state.totalDrachmaSupply}</div>
             </div>
             <div className="stats-op">
-              <div className="top-box-desc">Total Nyan Staked</div>
-              <div className="top-box-val">{this.getRoundedTotalNyanStaked()}</div>
+              <div className="top-box-desc">Total Drachma Staked</div>
+              <div className="top-box-val">{this.getRoundedTotalDrachmaStaked()}</div>
             </div>
             <div className="stats-op">
-              <div className="top-box-desc">Total Catnip Supply</div>
-              <div className="top-box-val">{this.state.totalCatnipSupply}</div>
+              <div className="top-box-desc">Total Obol Supply</div>
+              <div className="top-box-val">{this.state.totalObolSupply}</div>
             </div>
           </div>
         </div>
-        <div styles={{backgroundImage: `url(${nyanGif})`}} className="Nyan-cat"></div>
+        <div styles={{backgroundImage: `url(${drachmaGif})`}} className="Drachma-cat"></div>
         <div className="Options-box">
           <div className="Option stake" onClick={this.toggleStakingView}>
             <h3>STAKE</h3>
@@ -257,20 +257,20 @@ class App extends Component {
         {this.state.isViewingPump ? <Pump toggle={this.togglePumpView} /> : null}
         {this.state.isViewingMine ? <Mine toggle={this.toggleMineView} /> : null}
 
-        <div className="address ny"><div className="addr-name">NYAN address:</div> <div className="addr-pink">0xc9ce70a381910d0a90b30d408cc9c7705ee882de</div></div>
-        <div className="address ct"><div className="addr-name">CATNIP address:</div> <div className="addr-pink">0xd2b93f66fd68c5572bfb8ebf45e2bd7968b38113</div> </div>
-        <div className="address dny"><div className="addr-name">darkNyan address:</div> <div className="addr-pink">0x23b7f3A35bda036e3B59A945E441E041E6B11101</div> </div>
+        <div className="address ny"><div className="addr-name">DRAC address:</div> <div className="addr-pink">0xc9ce70a381910d0a90b30d408cc9c7705ee882de</div></div>
+        <div className="address ct"><div className="addr-name">OBOL address:</div> <div className="addr-pink">0xd2b93f66fd68c5572bfb8ebf45e2bd7968b38113</div> </div>
+        <div className="address dny"><div className="addr-name">tetraDrachm address:</div> <div className="addr-pink">0x23b7f3A35bda036e3B59A945E441E041E6B11101</div> </div>
         <div className="links-box">
-          <a href="https://etherscan.io/token/0xc9ce70a381910d0a90b30d408cc9c7705ee882de">NYAN Token Etherscan</a> . <a href="https://uniswap.info/pair/0x544cd63c9a3363dab66733bf8073cb981db58cba">NYAN-ETH Uniswap</a>
+          <a href="https://etherscan.io/token/0xc9ce70a381910d0a90b30d408cc9c7705ee882de">DRAC Token Etherscan</a> . <a href="https://uniswap.info/pair/0x544cd63c9a3363dab66733bf8073cb981db58cba">DRAC-ETH Uniswap</a>
         </div>
         <div className="social-box">
-            <a target="_blank" rel="noopener noreferrer" href={"https://github.com/geass-zero/nyan.finance"}>
+            <a target="_blank" rel="noopener noreferrer" href={"https://github.com/geass-zero/drachma.finance"}>
               <div className="social-icon git"></div>
             </a>
-            <a target="_blank" rel="noopener noreferrer" href={"https://www.twitter.com/nyanfinance"}>
+            <a target="_blank" rel="noopener noreferrer" href={"https://www.twitter.com/drachmafinance"}>
               <div className="social-icon twit"></div>
             </a> 
-            <a target="_blank" rel="noopener noreferrer" href={"https://t.me/nyanfinance"}>
+            <a target="_blank" rel="noopener noreferrer" href={"https://t.me/drachmafinance"}>
               <div className="social-icon tele"></div>
             </a>
 

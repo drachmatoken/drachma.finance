@@ -21,23 +21,23 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
   },
   {
     "revision": "db3931db6426399b5cb94046e9150cb2",
-    "url": "/static/media/Dark_Nyan.db3931db.gif"
+    "url": "/static/media/Tetra_Drachm.db3931db.gif"
   },
   {
     "revision": "ddffeeccd93bfa8838233c4c19073785",
-    "url": "/static/media/Nyan_pump.ddffeecc.gif"
+    "url": "/static/media/Drachma_pump.ddffeecc.gif"
   },
   {
     "revision": "decb4b682f27410f68bed3cfd25567db",
-    "url": "/static/media/Nyan_stake.decb4b68.gif"
+    "url": "/static/media/Drachma_stake.decb4b68.gif"
   },
   {
     "revision": "1859696178ada5cf499e4b26a62d0597",
-    "url": "/static/media/Nyan_vote.18596961.gif"
+    "url": "/static/media/Drachma_vote.18596961.gif"
   },
   {
     "revision": "011211f0eb123260d8750de3033d968c",
-    "url": "/static/media/catnip.011211f0.png"
+    "url": "/static/media/obol.011211f0.png"
   },
   {
     "revision": "99cb2cd3ece198973f5c5b8124512cfb",
@@ -45,7 +45,7 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
   },
   {
     "revision": "38ec77e47a3a2a27bced6860ae1252e6",
-    "url": "/static/media/nyan-small.38ec77e4.gif"
+    "url": "/static/media/drachma-small.38ec77e4.gif"
   },
   {
     "revision": "a823024f323f3cd4345044aa8c51d5ac",

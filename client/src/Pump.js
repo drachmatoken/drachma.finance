@@ -18,28 +18,28 @@ export default class Pump extends Component {
             <h3>Let's build a whale!</h3>
 
             <div>
-                <p>NYAN is introducing a publically governed Uniswap Hedge fund.</p>
+                <p>DRAC is introducing a publically governed Uniswap Hedge fund.</p>
             </div>
             
             <div>
-                <p>20% of all minted Catnip goes to a funding contract every few days.</p>
+                <p>20% of all minted Obol goes to a funding contract every few days.</p>
             </div>
           
             <div>
-                <p>NYAN holders will be able to vote on which Uniswap token the contract will swap for. </p>
+                <p>DRAC holders will be able to vote on which Uniswap token the contract will swap for. </p>
             </div>
 
             <div>
-              <p>The contract will hold the token for a specified amount of blocks or until NYAN holders
-                    vote for a swap back to Catnip</p>
+              <p>The contract will hold the token for a specified amount of blocks or until DRAC holders
+                    vote for a swap back to Obol</p>
             </div>
             
             <div>
-                <p>During a swap back to Catnip, the resulting Catnip will
-                    be proportionately distributed to NYAN holders.</p>
+                <p>During a swap back to Obol, the resulting Obol will
+                    be proportionately distributed to DRAC holders.</p>
             </div>
 
-            <div className="vote-nyan"></div>
+            <div className="vote-drachma"></div>
 
             <div className="button launch-date">Voting starts late September</div>
         </div>
